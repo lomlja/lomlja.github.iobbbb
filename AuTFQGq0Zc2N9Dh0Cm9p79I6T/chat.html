@@ -525,6 +525,17 @@ const module = {
 
     </script>
     <script src="../js/block.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const input = document.querySelector('input');
+            if (input) {
+                input.setAttribute('autocorrect', 'on');
+                input.setAttribute('spellcheck', 'true');
+                input.setAttribute('autocomplete', 'on');
+            }
+        });
+    </script>
+    
 
 </body>
 </html>

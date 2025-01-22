@@ -30,8 +30,7 @@ function closePopup() {
 function checkTime() {
     const now = new Date();
     const hour = now.getHours();
-    const minute = now.getMinutes();
-    console.log(`Current Time: ${hour}:${minute}`);
+    console.log(`Current Time: ${hour}`);
 
     if (hour >= 0 && hour < 5) {
         console.log("Popup should appear");
@@ -42,8 +41,16 @@ function checkTime() {
     }
 }
 
-// Run checkTime initially to handle the case when the page loads during restricted hours
-checkTime();
+// Set up an interval to check the time every second (1000ms)
+setInterval(checkTime, 1000);
 
-// Set up an interval to check the time every minute
-setInterval(checkTime, 60000); // 60000ms = 1 minute
+// Add event listener for visibility change to ensure the popup works when returning to the tab
+document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") {
+        console.log("Tab became active, checking time...");
+        checkTime();
+    }
+});
+
+// Initial time check
+checkTime();
