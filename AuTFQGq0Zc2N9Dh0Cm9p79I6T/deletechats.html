@@ -54,6 +54,7 @@
     
     <audio id="sendAudio" src="../send.mp3" preload="auto"></audio>
     <audio id="receiveAudio" src="../receive.mp3" preload="auto"></audio>
+    
     <script>
         module = {};
     </script>
@@ -176,8 +177,13 @@ onChildAdded(ref(db, "messages"), (data) => {
     loadingIndicator.style.display = 'none';
 });
 
-// Function to delete a message directly without confirmation
+// Function to delete a message directly without confirmation and play a click sound
 module.dltMsg = function dltMsg(key) {
+    // Play the click sound
+    const clickAudio = new Audio('../click.mp3');
+    clickAudio.play();
+
+    // Delete the message from the database
     remove(ref(db, "messages/" + key))
         .then(() => {
             console.log(`Message with key ${key} deleted successfully.`);
@@ -186,6 +192,7 @@ module.dltMsg = function dltMsg(key) {
             console.error("Error deleting message:", error);
         });
 };
+
 
 // When a message is deleted, remove it from the chat display
 onChildRemoved(ref(db, "messages"), (data) => {
