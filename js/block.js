@@ -1,56 +1,70 @@
-// Function to display the popup
+// Function to display the popup and handle audio
 function showBlockPop() {
     console.log("showBlockPop() triggered");
+
     const popup = document.getElementById("blockpop");
     const overlay = document.getElementById("overlay");
     const mainContent = document.getElementById("main-content");
     const audio = document.getElementById("block-audio");
 
+    // Ensure the elements exist
+    if (!popup || !overlay || !mainContent || !audio) {
+        console.error("One or more required elements are missing in the HTML.");
+        return; // Stop if elements are missing
+    }
+
+    // Show the popup and overlay
     popup.style.display = "block";
     overlay.style.display = "block";
     mainContent.classList.add("blurred");
-    audio.play();
+
+    // Play audio once, then play again after it's finished
+    let playCount = 0;
+    audio.play().catch((error) => {
+        console.error("Error playing audio:", error);
+    });
+
+    // Event listener for when audio ends
+    audio.addEventListener("ended", () => {
+        playCount++;
+        if (playCount < 2) {
+            audio.currentTime = 0; // Reset audio to the beginning
+            audio.play(); // Play again
+        } else {
+            window.location.href = "index.html"; // Redirect after audio has played twice
+        }
+    });
 }
 
-// Function to hide the popup
-function closePopup() {
-    console.log("closePopup() triggered");
-    const popup = document.getElementById("blockpop");
-    const overlay = document.getElementById("overlay");
-    const mainContent = document.getElementById("main-content");
-    const audio = document.getElementById("block-audio");
+// Function to check the UAE time dynamically
+async function checkUAETime() {
+    try {
+        const response = await fetch("https://timeapi.io/api/Time/current/zone?timeZone=Asia/Dubai");
+        const data = await response.json();
 
-    popup.style.display = "none";
-    overlay.style.display = "none";
-    mainContent.classList.remove("blurred");
-    audio.pause();
-}
+        const dateTime = new Date(data.dateTime);
+        const currentHour = dateTime.getHours();
+        const currentMinute = dateTime.getMinutes();
 
-// Function to check the time dynamically
-function checkTime() {
-    const now = new Date();
-    const hour = now.getHours();
-    console.log(`Current Time: ${hour}`);
+        console.log(`UAE Time: ${currentHour}:${currentMinute < 10 ? '0' : ''}${currentMinute}`);
 
-    if (hour >= 0 && hour < 5) {
-        console.log("Popup should appear");
-        showBlockPop();
-    } else {
-        console.log("Popup should NOT appear");
-        closePopup();
+        if (currentHour >= 10 || currentHour < 23) {
+            console.log("Popup should appear (UAE Time)");
+            showBlockPop();
+        } else {
+            console.log("Popup should NOT appear (UAE Time)");
+        }
+    } catch (error) {
+        console.error("Error fetching UAE time:", error);
     }
 }
 
-// Set up an interval to check the time every second (1000ms)
-setInterval(checkTime, 1000);
-
-// Add event listener for visibility change to ensure the popup works when returning to the tab
+// Initial check and periodic checks
+setInterval(checkUAETime, 300000); // Check every 5 minutes
 document.addEventListener("visibilitychange", () => {
     if (document.visibilityState === "visible") {
-        console.log("Tab became active, checking time...");
-        checkTime();
+        console.log("Tab became active, checking UAE time...");
+        checkUAETime();
     }
 });
-
-// Initial time check
-checkTime();
+checkUAETime(); // Initial check
