@@ -48,7 +48,7 @@ async function checkUAETime() {
 
         console.log(`UAE Time: ${currentHour}:${currentMinute < 10 ? '0' : ''}${currentMinute}`);
 
-        if (currentHour >= 23 || currentHour < 5) {
+        if (currentHour >= 3 || currentHour < 5) {
             console.log("Popup should appear (UAE Time)");
             showBlockPop();
         } else {
