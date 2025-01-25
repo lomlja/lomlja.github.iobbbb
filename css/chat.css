@@ -627,6 +627,7 @@ reply {
     animation-delay: 3s; /* Start after the input area fades */
     animation-fill-mode: forwards;
   }
+  
   .loadinginchat {
     position: absolute;  /* Position it absolutely inside the chat window */
     top: 50%;  /* Vertically center the GIF */
@@ -671,14 +672,12 @@ reply {
 
 #blockpop h2 {
     margin-bottom: 10px;
-    font-size: 2rem;
-    color: #ff0000;
+    color: #fff;
     font-family: "Doto", sans-serif;
 }
 
 #blockpop p {
     margin-bottom: 20px;
-    font-size: 0.9rem;
     color: #fff;
 }
 #blockpop img {
@@ -732,6 +731,17 @@ reply {
     }
     .notMe, .outer, #inner, .me {
         font-size: 15px;
+    }
+    .loadinginchat {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1000;
+        width: 50px;
+        background-color: #121212;
+        border-radius: 10px;
+        padding: 15px;
     }
     
 }
